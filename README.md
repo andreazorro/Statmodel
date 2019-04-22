@@ -18,7 +18,7 @@ Output
 * Net = Inferred network write as 3-column cell array 
 	* Column 1 = Regulator 
 	* Column 2 = Target Gene 
-	* Column 3 = score of the interaction (the higher the score, the more reliable the interaction)
+	* Column 3 = score of the interaction (the higher the score, the more likely the interaction)
 		 
 Bibliography		 
 ------------
