@@ -8,21 +8,15 @@ function [sNet] = Statmodel(genes, regulators, expressiondata)
     'Lognormal','Nakagami','NegativeBinomial','Normal','Poisson','Rayleigh',...
     'Rician','Stable','tLocationScale','Weibull'};
 
-    nr = size(regulators,1);
-    tfs = zeros(1,nr);
-
-    parfor i = 1:nr
-        try
-            tfs(1,i) = find(strcmp(genes,regulators{i}));
-        catch
-            continue
-        end
-    end
-
+    tfs = cellfun(@(x)find(strcmp(x,gene_names)),regulators,'UniformOutput',false);
+    tfs(logical(cellfun('isempty',tfs))) = {0};
+    tfs = cell2mat(tfs);
     tfs = tfs(tfs ~= 0);
+    
+    tfexpression = expressiondata(tfs,:);
 
     ngenes = size(expressiondata,1);
-    ntf = size(tfs,2);
+    ntf = size(tfs,1);
     ndist = size(distribution,2);
 
     pv = zeros(ngenes,ntf);
@@ -61,10 +55,10 @@ function [sNet] = Statmodel(genes, regulators, expressiondata)
         
         parfor n = 1:ntf
             
-            if tfs(1,n) == j 
+            if j == tfs(n)
                 continue
             else
-                X = expressiondata(tfs(n),:)';
+                X = tfexpression(j,:)';
                 meanX = mean(X);           
                 maxX = max(X); 
                 minX = min(X); 
