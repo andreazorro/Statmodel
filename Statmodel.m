@@ -1,4 +1,4 @@
-function [sNet] = Statmodel(genes, regulators, expressiondata)
+function [sNet] = Statmodel(gene_names, regulators, expressiondata)
 
     expressiondata = expressiondata';
 
@@ -55,10 +55,10 @@ function [sNet] = Statmodel(genes, regulators, expressiondata)
         
         parfor n = 1:ntf
             
-            if j == tfs(n)
+            if j == tfs(n,1)
                 continue
             else
-                X = tfexpression(j,:)';
+                X = tfexpression(n,:)';
                 meanX = mean(X);           
                 maxX = max(X); 
                 minX = min(X); 
@@ -96,8 +96,8 @@ function [sNet] = Statmodel(genes, regulators, expressiondata)
             if pv(j,i) == 0 
                 continue
             else
-                Net{r,1} = genes{tfs(i)};
-                Net{r,2} = genes{j}; 
+                Net{r,1} = gene_names{tfs(i)};
+                Net{r,2} = gene_names{j}; 
                 Net{r,3} = -log(pv(j,i)); 
                 r = r+1; 
             end
