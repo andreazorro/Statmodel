@@ -55,37 +55,33 @@ function [sNet] = Statmodel(gene_names, regulators, expressiondata)
         
         parfor n = 1:ntf
             
-            if j == tfs(n,1)
-                continue
-            else
-                X = tfexpression(n,:)';
-                meanX = mean(X);           
-                maxX = max(X); 
-                minX = min(X); 
-                stX = (X - meanX)/(maxX - minX);         
-                
-                Xmp = find(stX >= mean(stX));
-                Xmn = find(stX <= mean(stX));
-            
-                stYp = stYm(Xmp);
-                stYn = stYm(Xmn); 
+            X = tfexpression(n,:)';
+            meanX = mean(X);           
+            maxX = max(X); 
+            minX = min(X); 
+            stX = (X - meanX)/(maxX - minX);         
 
-                if size(stYp)<=size(stYn) 
-                    stYt=stYp; 
+            Xmp = find(stX >= mean(stX));
+            Xmn = find(stX <= mean(stX));
+
+            stYp = stYm(Xmp);
+            stYn = stYm(Xmn); 
+
+            if size(stYp)<=size(stYn) 
+                stYt=stYp; 
+            else
+                stYt=stYn; 
+            end
+
+            if abs(mean(stYp) - mean(stYn)) >= 0.05 
+                [h0,p0] = chi2gof(stYt,'CDF',bestpdY); 
+                if  h0 == 1 
+                    pv(j,n) = p0; 
                 else
-                    stYt=stYn; 
-                end
-            
-                if abs(mean(stYp) - mean(stYn)) >= 0.05 
-                    [h0,p0] = chi2gof(stYt,'CDF',bestpdY); 
-                    if  h0 == 1 
-                        pv(j,n) = p0; 
-                    else
-                        continue 
-                    end
+                    continue 
                 end
             end
-        end
+         end
     end
 
     r = 1;
