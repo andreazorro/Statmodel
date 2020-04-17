@@ -8,10 +8,7 @@ function [sNet] = Statmodel(gene_names, regulators, expressiondata)
     'Lognormal','Nakagami','NegativeBinomial','Normal','Poisson','Rayleigh',...
     'Rician','Stable','tLocationScale','Weibull'};
 
-    tfs = cellfun(@(x)find(strcmp(x,gene_names)),regulators,'UniformOutput',false);
-    tfs(logical(cellfun('isempty',tfs))) = {0};
-    tfs = cell2mat(tfs);
-    tfs = tfs(tfs ~= 0);
+    tfs = find(ismember(gene_names,regulators))';
     
     tfexpression = expressiondata(tfs,:);
 
